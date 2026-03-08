@@ -25,7 +25,7 @@ pub fn build(b: *std.Build) void {
         exe_mod.addIncludePath(b.path("include"));
 
         const exe = b.addExecutable(.{
-            .name = "steam-nocloud-noupdates",
+            .name = "Steam NoCloud NoUpdates",
             .root_module = exe_mod,
         });
 
