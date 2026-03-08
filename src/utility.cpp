@@ -4,7 +4,7 @@
 #include <algorithm>
 #include <filesystem>
 #include <vector>
-#include "disable-steam-cloud-and-auto-update/utility.hpp"
+#include "steam-nocloud-noupdates/utility.hpp"
 
 using namespace std;
 

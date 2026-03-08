@@ -3,16 +3,16 @@
 #ifdef _WIN32
 #include <windows.h>
 #endif
-#include "disable-steam-cloud-and-auto-update/cloud_disable.hpp"
-#include "disable-steam-cloud-and-auto-update/autoupdate_disable.hpp"
-#include "disable-steam-cloud-and-auto-update/utility.hpp"
+#include "steam-nocloud-noupdates/cloud_disable.hpp"
+#include "steam-nocloud-noupdates/autoupdate_disable.hpp"
+#include "steam-nocloud-noupdates/utility.hpp"
 
 using namespace std;
 
 int main()
 {
 #ifdef _WIN32
-    SetConsoleTitleA("disable-steam-cloud-and-auto-update");
+    SetConsoleTitleA("Steam NoCloud NoUpdates");
 #endif
 
     try
