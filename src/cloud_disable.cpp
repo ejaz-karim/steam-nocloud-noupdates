@@ -2,7 +2,9 @@
 #include <fstream>
 #include <sstream>
 #include <algorithm>
+#include <filesystem>
 #include "steam-nocloud-noupdates/cloud_disable.hpp"
+#include "steam-nocloud-noupdates/utility.hpp"
 
 using namespace std;
 
@@ -71,51 +73,51 @@ string CloudDisabler::createAppsBlock(const string &sharedConfigText)
     return buffer.str();
 }
 
-[[deprecated("Use getAcfID() in utility.cpp instead.")]]
-string CloudDisabler::extractGameIds(const string &libraryBuffer)
-{
-    stringstream id_buffer;
-    string line;
-    bool appsLineReached = false;
+// [[deprecated("Use getAcfID() in utility.cpp instead.")]]
+// string CloudDisabler::extractGameIds(const string &libraryBuffer)
+// {
+//     stringstream id_buffer;
+//     string line;
+//     bool appsLineReached = false;
 
-    if (!checkAppsBlock(libraryBuffer))
-    {
-        cout << "\"apps\" was not found in /libraryfolders.vdf, this can occur if you recently installed Steam" << endl;
-        return "";
-    }
+//     if (!checkAppsBlock(libraryBuffer))
+//     {
+//         cout << "\"apps\" was not found in /libraryfolders.vdf, this can occur if you recently installed Steam" << endl;
+//         return "";
+//     }
 
-    stringstream library_buffer(libraryBuffer);
-    while (getline(library_buffer, line))
-    {
-        if (line.find("apps") != string::npos)
-        {
-            appsLineReached = true;
-        }
+//     stringstream library_buffer(libraryBuffer);
+//     while (getline(library_buffer, line))
+//     {
+//         if (line.find("apps") != string::npos)
+//         {
+//             appsLineReached = true;
+//         }
 
-        if (appsLineReached && any_of(line.begin(), line.end(), ::isdigit))
-        {
-            line.erase(remove_if(line.begin(), line.end(), ::isspace), line.end());
-            string idLine;
-            int quoteCount = 0;
-            for (int i = 0; quoteCount < 2; ++i)
-            {
-                if (line[i] == '\"')
-                {
-                    ++quoteCount;
-                }
-                idLine += line[i];
-            }
-            id_buffer << idLine << endl;
-        }
+//         if (appsLineReached && any_of(line.begin(), line.end(), ::isdigit))
+//         {
+//             line.erase(remove_if(line.begin(), line.end(), ::isspace), line.end());
+//             string idLine;
+//             int quoteCount = 0;
+//             for (int i = 0; quoteCount < 2; ++i)
+//             {
+//                 if (line[i] == '\"')
+//                 {
+//                     ++quoteCount;
+//                 }
+//                 idLine += line[i];
+//             }
+//             id_buffer << idLine << endl;
+//         }
 
-        if (line.find("}") != string::npos && appsLineReached)
-        {
-            appsLineReached = false;
-        }
-    }
+//         if (line.find("}") != string::npos && appsLineReached)
+//         {
+//             appsLineReached = false;
+//         }
+//     }
 
-    return id_buffer.str();
-}
+//     return id_buffer.str();
+// }
 
 bool CloudDisabler::replaceAppsBlock(const string &sharedConfigPath, const string &sharedConfigText, const string &acfIds)
 {
@@ -179,5 +181,30 @@ bool CloudDisabler::replaceAppsBlock(const string &sharedConfigPath, const strin
     cout << ">Modified: " << sharedConfigPath << endl;
     cout << ">Cloud disabled for " << gameCount << " games" << endl;
 
+    return true;
+}
+
+bool CloudDisabler::iterateSharedConfig(const string &userDataPath, const string &acfIds)
+{
+    FileUtility fileUtility;
+    for (const auto &entry : filesystem::directory_iterator(userDataPath))
+    {
+        if (entry.is_directory())
+        {
+            string steamID = entry.path().string();
+            replace(steamID.begin(), steamID.end(), '\\', '/');
+
+            string remotePath = steamID + "/7/remote";
+            if (filesystem::exists(remotePath))
+            {
+                string sharedConfigPath = remotePath + "/sharedconfig.vdf";
+                if (filesystem::exists(sharedConfigPath))
+                {
+                    string sharedConfigText = fileUtility.readFileContents(sharedConfigPath);
+                    replaceAppsBlock(sharedConfigPath, sharedConfigText, acfIds);
+                }
+            }
+        }
+    }
     return true;
 }

@@ -13,4 +13,5 @@ public:
     std::string createAppsBlock(const std::string &sharedConfigText);
     std::string extractGameIds(const std::string &libraryBuffer);
     bool replaceAppsBlock(const std::string &sharedConfigPath, const std::string &sharedConfigText, const std::string &acfIds);
+    bool iterateSharedConfig(const std::string &userDataPath, const std::string &acfIds);
 };

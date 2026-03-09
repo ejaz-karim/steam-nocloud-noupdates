@@ -44,39 +44,26 @@ int main()
             }
             else if (input == "1")
             {
-                CloudDisabler cloudDisabler;
                 string acfIds = fileUtility.getAcfID(steamAppsPath);
-
+                if (acfIds.empty())
+                {
+                    cout << ">There are no games in your steamapps folder" << endl;
+                    continue;
+                }
+                
+                CloudDisabler cloudDisabler;
+                cloudDisabler.iterateSharedConfig(userDataPath, acfIds);
+                cout << ">Success" << endl;
+            }
+            else if (input == "2")
+            {
+                string acfIds = fileUtility.getAcfID(steamAppsPath);
                 if (acfIds.empty())
                 {
                     cout << ">There are no games in your steamapps folder" << endl;
                     continue;
                 }
 
-                for (const auto &entry : filesystem::directory_iterator(userDataPath))
-                {
-                    if (entry.is_directory())
-                    {
-                        string steamID = entry.path().string();
-                        replace(steamID.begin(), steamID.end(), '\\', '/');
-                        
-                        string remotePath = steamID + "/7/remote";
-                        if (filesystem::exists(remotePath))
-                        {
-                            string sharedConfigPath = remotePath + "/sharedconfig.vdf";
-                            if (filesystem::exists(sharedConfigPath))
-                            {
-                                string sharedConfigText = fileUtility.readFileContents(sharedConfigPath);
-                                cloudDisabler.replaceAppsBlock(sharedConfigPath, sharedConfigText, acfIds);
-                            }
-                        }
-                    }
-                }
-
-                cout << ">Success" << endl;
-            }
-            else if (input == "2")
-            {
                 AutoUpdateDisabler autoUpdateDisabler;
                 autoUpdateDisabler.iterateSteamApps(steamAppsPath);
                 cout << ">Success" << endl;
