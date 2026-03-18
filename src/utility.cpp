@@ -23,9 +23,8 @@ string FileUtility::readFileContents(const string &filePath)
     return buffer.str();
 }
 
-
 // Get all game ids from the .acf file names in /steamapps/
-string FileUtility::getAcfID(const string &path)
+vector<int> FileUtility::getAcfID(const string &path)
 {
     vector<int> intVector;
     for (const auto &entry : filesystem::directory_iterator(path))
@@ -42,6 +41,11 @@ string FileUtility::getAcfID(const string &path)
         }
     }
 
+    return intVector;
+}
+
+string FileUtility::sortAcfID(const vector<int> &intVector)
+{
     sort(intVector.begin(), intVector.end());
     stringstream buffer;
 
@@ -51,9 +55,9 @@ string FileUtility::getAcfID(const string &path)
         id = "\"" + id + "\"";
         buffer << id << endl;
     }
+
     return buffer.str();
 }
-
 
 string FileUtility::loadSteamRoot()
 {

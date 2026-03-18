@@ -4,13 +4,15 @@
 #include <sstream>
 #include <algorithm>
 #include <filesystem>
+#include <vector>
 
 class FileUtility
 {
 public:
     FileUtility();
     std::string readFileContents(const std::string &filePath);
-    std::string getAcfID(const std::string &path);
+    std::vector<int> getAcfID(const std::string &path);
+    std::string sortAcfID(const std::vector<int> &intVector);
     std::string resolveSteamRoot();
     std::string promptSteamRoot();
     void saveSteamRoot(const std::string &path);
