@@ -44,7 +44,8 @@ int main()
             }
             else if (input == "1")
             {
-                string acfIds = fileUtility.getAcfID(steamAppsPath);
+                vector<int> vectorAcfIds = fileUtility.getAcfID(steamAppsPath);
+                string acfIds = fileUtility.sortAcfID(vectorAcfIds);
                 if (acfIds.empty())
                 {
                     cout << ">There are no games in your steamapps folder" << endl;
@@ -57,7 +58,8 @@ int main()
             }
             else if (input == "2")
             {
-                string acfIds = fileUtility.getAcfID(steamAppsPath);
+                vector<int> vectorAcfIds = fileUtility.getAcfID(steamAppsPath);
+                string acfIds = fileUtility.sortAcfID(vectorAcfIds);
                 if (acfIds.empty())
                 {
                     cout << ">There are no games in your steamapps folder" << endl;

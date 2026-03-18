@@ -12,7 +12,7 @@ public:
     FileUtility();
     std::string readFileContents(const std::string &filePath);
     std::vector<int> getAcfID(const std::string &path);
-    std::string sortAcfID(const std::vector<int> &intVector);
+    std::string sortAcfID(std::vector<int> &intVector);
     std::string resolveSteamRoot();
     std::string promptSteamRoot();
     void saveSteamRoot(const std::string &path);

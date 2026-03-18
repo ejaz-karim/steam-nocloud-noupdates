@@ -44,7 +44,7 @@ vector<int> FileUtility::getAcfID(const string &path)
     return intVector;
 }
 
-string FileUtility::sortAcfID(const vector<int> &intVector)
+string FileUtility::sortAcfID(vector<int> &intVector)
 {
     sort(intVector.begin(), intVector.end());
     stringstream buffer;
